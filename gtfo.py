@@ -1,6 +1,8 @@
 import subprocess
 import os
 import sys
+import shutil
+
 
 sudo_payloads = {
 	"ash" : "sudo ash",
@@ -137,11 +139,15 @@ if not outp:
 else:
 	for binname in sudo_payloads.keys():
 		if binname in outp:
-			print("sudobin"+binname+" found!")
-			suidbins.append(i)
+			print("sudobin "+binname+" found!")
+			sudobins.append(binname)
+		elif hasfullsudopriv:
+			if shutil.which(binname) is not None:
+				print("sudobin "+binname+" found!")
+				sudobins.append(binname)
 
 #----Log findings to file----
-with open("gtfobinlog.txt","w") as outfile:
+with open("gtfolog.txt","w") as outfile:
 	if hasfullsudopriv:
 		outfile.write("User has full sudo privelleges!\n")
 
